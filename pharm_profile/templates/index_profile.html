@@ -33,6 +33,7 @@
             function makeProfile() {
                 // 1. 제목, 저자, 리뷰 내용을 가져옵니다.
                 let pharm_name = $("#pharm_name").val();
+                let pharm_img = $("#pharm_img").val();
                 let pharm_number = $("#pharm_number").val();
                 let school = $("#school").val();
                 let career = $("#career").val();
@@ -45,8 +46,8 @@
                 // 3. POST /review 에 저장을 요청합니다.
                 $.ajax({
                     type: "POST",
-                    url: "/pharmacists",
-                    data: {pharm_name_give : pharm_name, pharm_number_give : pharm_number, school_give : school, career_give : career, education_give : education, brief_explain_give : brief_explain, detail_explain_give : detail_explain },
+                    url: "/pharmacists_db",
+                    data: {pharm_name_give : pharm_name, pharm_img_give : pharm_img, pharm_number_give : pharm_number, school_give : school, career_give : career, education_give : education, brief_explain_give : brief_explain, detail_explain_give : detail_explain },
                     success: function (response) {
                         if (response["result"] == "success") {
                             alert(response["msg"]);
@@ -120,6 +121,12 @@
                         <span class="input-group-text">이름</span>
                     </div>
                     <input type="text" class="form-control" id="pharm_name">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">사진</span>
+                    </div>
+                    <input type="text" class="form-control" id="pharm_img">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request
+from bson import ObjectId
 
 app = Flask(__name__)
 
@@ -9,15 +10,16 @@ db = client.dbproject
 
 
 ## HTML 화면 보여주기
-@app.route('/')
+@app.route('/pharmacists')
 def pharm_profile():
     return render_template('index_profile.html')
 
 
 # 주문하기(POST) API
-@app.route('/pharmacists', methods=['POST'])
+@app.route('/pharmacists_db', methods=['POST'])
 def save_profile():
     pharm_name_receive = request.form['pharm_name_give']
+    pharm_img_receive = request.form['pharm_img_give']
     pharm_number_receive = request.form['pharm_number_give']
     school_receive = request.form['school_give']
     career_receive = request.form['career_give']
@@ -27,12 +29,15 @@ def save_profile():
 
     pharmacists = {
         'pharm_name' : pharm_name_receive,
+        'pharm_img' : pharm_img_receive,
         'pharm_number' : pharm_number_receive,
         'school' : school_receive,
         'career' : career_receive,
         'education' : education_receive,
         'brief_explain' : brief_explain_receive,
-        'detail_explain' : detail_explain_receive
+        'detail_explain' : detail_explain_receive,
+        'stars' : 0,
+        'total_review' : 0
     }
 
     db.pharmacists.insert_one(pharmacists)
@@ -55,23 +60,43 @@ def reviews():
 
 
 # 주문하기(POST) API
-@app.route('/reviews', methods=['POST'])
-def save_profile():
+@app.route('/reviews_db', methods=['POST'])
+def save_review():
+    id_receive = request.form['_id']
     phone_number_receive = request.form['phone_number_give']
     pharm_name_receive = request.form['pharm_name_give']
     star_give_receive = request.form['star_give']
     review_detail_receive = request.form['review_detail_give']
 
     reviews = {
+        'pharmacist_id' : id_receive,
         'phone_number' : phone_number_receive,
-        'pharm_name' : pharm_name_receive,
         'star_give' : star_give_receive,
         'review_detail' : review_detail_receive,
     }
 
     db.reviews.insert_one(reviews)
+    pharmacist = db.pharmacists.find_one({'_id': ObjectId(id_receive)})
 
     return jsonify({'result': 'success', 'msg' : '후기등록이 완료되었습니다!'})
+
+
+# # HTML 화면 보여주기
+# @app.route('/mypharm')
+# def home():
+#     return render_template('index_total_profile.html')
+
+
+# API 역할을 하는 부분
+# @app.route('/pharmacists_db', methods=['GET'])
+# def show_pharmacist():
+#     # 1. db에서 mystar 목록 전체를 검색합니다. ID는 제외하고 like 가 많은 순으로 정렬합니다.
+#     # 참고) find({},{'_id':False}), sort()를 활용하면 굿!
+#     pharm_list = object_id_decoder(list(db.pharmacists.find()))
+#
+#     # 2. 성공하면 success 메시지와 함께 stars_list 목록을 클라이언트에 전달합니다.
+#     return jsonify({'result': 'success', 'data': pharm_list})
+
 
 
 if __name__ == '__main__':
