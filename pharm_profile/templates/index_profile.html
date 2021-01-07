@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+    <head>
+        <!-- Webpage Title -->
+        <title>약사 프로필 등록</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+              crossorigin="anonymous">
+
+        <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+
+        <!-- 구글폰트 -->
+        <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+        <script type="text/javascript">
+
+            // $(document).ready(function () {
+            //     $("#reviews-box").html("");
+            //     showReview();
+            // });
+
+            function makeProfile() {
+                // 1. 제목, 저자, 리뷰 내용을 가져옵니다.
+                let pharm_name = $("#pharm_name").val();
+                let pharm_number = $("#pharm_number").val();
+                let school = $("#school").val();
+                let career = $("#career").val();
+                let education = $("#education").val();
+                let brief_explain = $("#brief_explain").val();
+                let detail_explain = $("#detail_explain").val();
+
+                // 2. 제목, 저자, 리뷰 중 하나라도 입력하지 않았을 경우 alert를 띄웁니다.
+
+                // 3. POST /review 에 저장을 요청합니다.
+                $.ajax({
+                    type: "POST",
+                    url: "/pharmacists",
+                    data: {pharm_name_give : pharm_name, pharm_number_give : pharm_number, school_give : school, career_give : career, education_give : education, brief_explain_give : brief_explain, detail_explain_give : detail_explain },
+                    success: function (response) {
+                        if (response["result"] == "success") {
+                            alert(response["msg"]);
+                            window.location.reload();
+                        }
+                    }
+                })
+            }
+
+            // function showReview() {
+            //     // 1. 리뷰 목록을 서버에 요청하기
+            //     // 2. 요청 성공 여부 확인하기
+            //     // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
+            //     $.ajax({
+            //         type: "GET",
+            //         url: "/review",
+            //         data: {},
+            //         success: function (response) {
+            //             if (response["result"] == "success") {
+            //                 alert(response["msg"]);
+            //             } else {
+            //                 alert("리뷰를 받아오지 못했습니다");
+            //             }
+            //         }
+            //     })
+            // }
+
+            function validateLength(obj) {
+                let content = $(obj).val();
+                if (content.length > 140) {
+                    alert("리뷰는 140자까지 기록할 수 있습니다.");
+                    $(obj).val(content.substring(0, content.length - 1));
+                }
+            }
+        </script>
+
+        <style type="text/css">
+            * {
+                font-family: "Do Hyeon", sans-serif;
+            }
+
+            h1,
+            h5 {
+                display: inline;
+            }
+
+            .info {
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            .profile {
+                text-align: center;
+            }
+
+            /*.reviews {*/
+            /*    margin-top: 100px;*/
+            /*}*/
+        </style>
+    </head>
+
+    <body>
+        <div class="container" style="max-width: 600px;">
+            <img src="https://www.chuksannews.co.kr/data/photos/tjtune/20190517/art_15580269241938.jpg"
+                 class="img-fluid" alt="Responsive image">
+            <div class="info">
+                <h1>프로필을 등록해주세요.</h1>
+                <p>해당 프로필은 단골약사 선정에 많은 도움이 되니 자세하게 작성해주세요.</p>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">이름</span>
+                    </div>
+                    <input type="text" class="form-control" id="pharm_name">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">면허번호</span>
+                    </div>
+                    <input type="text" class="form-control" id="pharm_number" placeholder="약사면허 번호를 입력해주세요.">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">학력</span>
+                    </div>
+                    <input type="text" class="form-control" id="school" placeholder="최종학력을 입력해주세요.">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">경력</span>
+                    </div>
+                    <input type="text" class="form-control" id="career" placeholder="경력을 입력해주세요.">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">교육사항</span>
+                    </div>
+                    <input type="text" class="form-control" id="education" placeholder="교육사항을 입력해주세요.">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">한줄소개</span>
+                    </div>
+                    <input type="text" class="form-control" id="brief_explain" placeholder="프로필 사진과 함께 보이는 소개글입니다.">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">상세소개</span>
+                    </div>
+                    <textarea class="form-control" id="detail_explain"
+                              cols="30"
+                              rows="5" placeholder="상세 프로필에서 보이는 소개글입니다. 140자까지 입력할 수 있습니다." onkeyup="validateLength(this)"></textarea>
+                </div>
+                <div class="profile">
+                    <button onclick="makeProfile()" type="button" class="btn btn-primary">프로필 등록하기</button>
+                </div>
+            </div>
+<!--            <div class="reviews">-->
+<!--                <table class="table">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th scope="col">제목</th>-->
+<!--                        <th scope="col">저자</th>-->
+<!--                        <th scope="col">리뷰</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody id="reviews-box">-->
+<!--                    <tr>-->
+<!--                        <td>왕초보 8주 코딩</td>-->
+<!--                        <td>김르탄</td>-->
+<!--                        <td>역시 왕초보 코딩교육의 명가답군요. 따라하다보니 눈 깜짝할 사이에 8주가 지났습니다.</td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+        </div>
+    </body>
+
+</html>
