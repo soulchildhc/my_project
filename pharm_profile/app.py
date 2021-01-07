@@ -82,22 +82,37 @@ def save_review():
 
 
 # # HTML 화면 보여주기
-# @app.route('/mypharm')
-# def home():
-#     return render_template('index_total_profile.html')
+@app.route('/mypharm')
+def home():
+    return render_template('index_total_profile.html')
+
 
 
 # API 역할을 하는 부분
-# @app.route('/pharmacists_db', methods=['GET'])
-# def show_pharmacist():
+@app.route('/pharmacists_db', methods=['GET'])
+def show_pharmacist():
 #     # 1. db에서 mystar 목록 전체를 검색합니다. ID는 제외하고 like 가 많은 순으로 정렬합니다.
 #     # 참고) find({},{'_id':False}), sort()를 활용하면 굿!
-#     pharm_list = object_id_decoder(list(db.pharmacists.find()))
+    pharm_list = object_id_decoder(db.pharmacists.find())
 #
 #     # 2. 성공하면 success 메시지와 함께 stars_list 목록을 클라이언트에 전달합니다.
-#     return jsonify({'result': 'success', 'data': pharm_list})
+    return jsonify({'result': 'success', 'data': pharm_list})
 
 
+@app.route('/one')
+def one():
+
+    id = request.args.get('id')
+
+
+    return render_template('index_one_profile.html', id = id)
+
+def object_id_decoder(data_list):
+    results = []
+    for data in data_list:
+        data['_id'] = str(data['_id'])
+        results.append(data)
+    return results
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
