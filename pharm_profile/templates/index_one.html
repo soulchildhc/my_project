@@ -9,6 +9,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -29,6 +32,18 @@
         //     $("#reviews-box").html("");
         //     showReview();
         // });
+
+        $(document).ready(function () {
+            let id = $("#_id").text().trim()
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:5000/pharmacist_db?id=' + id,
+                success: function (res) {
+                    console.log(res);
+                }
+            });
+        });
+
 
         function makeReview() {
             // 1. 제목, 저자, 리뷰 내용을 가져옵니다.
@@ -108,13 +123,27 @@
         /*.reviews {*/
         /*    margin-top: 100px;*/
         /*}*/
+
+        #_id {
+            display: none;
+        }
+
+
     </style>
 </head>
 
 <body>
-<div class="container" style="max-width: 600px;">
+    <div id="_id">
+        {{id}}
+    </div>
+
+
+
+    <div class="container" style="max-width: 600px;">
     <img src="https://m.glossygirl.co.kr/file_data/evinie/2019/03/28/6b48e312e6bc971445b5f3019b37fe87.jpg"
          class="img-fluid" alt="Responsive image">
+
+
     <div class="info">
         <h1>후기를 입력해주세요.</h1>
         <p>후기를 입력하고 적립금 받아가세요</p>

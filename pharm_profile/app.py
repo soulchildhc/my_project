@@ -56,7 +56,7 @@ def save_profile():
 ## HTML 화면 보여주기
 @app.route('/reviews')
 def reviews():
-    return render_template('index_review.html')
+    return render_template('index_one.html')
 
 
 # 주문하기(POST) API
@@ -99,13 +99,22 @@ def show_pharmacist():
     return jsonify({'result': 'success', 'data': pharm_list})
 
 
+
+
+@app.route('/pharmacist_db', methods=['GET'])
+def get_pharmacist():
+    id = request.args.get('id')
+    pharm = db.pharmacists.find_one({'_id': ObjectId(id)}, {'_id': False})
+    return jsonify({'result': 'success', 'data': pharm})
+
+
 @app.route('/one')
 def one():
 
     id = request.args.get('id')
 
 
-    return render_template('index_one_profile.html', id = id)
+    return render_template('index_one.html', id = id)
 
 def object_id_decoder(data_list):
     results = []
@@ -116,3 +125,4 @@ def object_id_decoder(data_list):
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
+
