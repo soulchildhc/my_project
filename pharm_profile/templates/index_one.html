@@ -28,10 +28,10 @@
 
     <script type="text/javascript">
 
-        // $(document).ready(function () {
-        //     $("#reviews-box").html("");
-        //     showReview();
-        // });
+        $(document).ready(function () {
+            $("#reviews-box").html("");
+            showReview();
+        });
 
         $(document).ready(function () {
             let id = $("#_id").text().trim()
@@ -39,7 +39,27 @@
                 type: 'GET',
                 url: 'http://localhost:5000/pharmacist_db?id=' + id,
                 success: function (res) {
-                    console.log(res);
+                    let one_info = res['data'];
+                    let pharm_img = one_info['pharm_img'];
+                    let brief_explain = one_info['brief_explain'];
+                    let name = one_info['pharm_name'];
+                    let school = one_info['school'];
+                    let career = one_info['career'];
+                    let education = one_info['education'];
+                    let detail_explain = one_info['detail_explain'];
+
+                    let temp = `<div class="profile">
+                                <img src="${pharm_img}"
+                                class="img-fluid" alt="Responsive image">
+                                <p></p>
+                                <h1>약사 ${name}</h1>
+                                <p>${brief_explain}</p>
+                                <p>학력 ${school}</p>
+                                <p>경력 ${career}</p>
+                                <p>교육 ${education}</p>
+                                <p>${detail_explain}</p>
+                                </div>`
+                    $('#pharmacist').append(temp);
                 }
             });
         });
@@ -51,6 +71,7 @@
             let pharm_name = $("#pharm_name").val();
             let star = $("#star").val();
             let review_detail = $("#review_detail").val();
+            let id = $("#_id").text().trim()
 
 
             // 2. 제목, 저자, 리뷰 중 하나라도 입력하지 않았을 경우 alert를 띄웁니다.
@@ -63,7 +84,8 @@
                     phone_number_give: phone_number,
                     pharm_name_give: pharm_name,
                     star_give: star,
-                    review_detail_give: review_detail
+                    review_detail_give: review_detail,
+                    // _id : id,
                 },
                 success: function (response) {
                     if (response["result"] == "success") {
@@ -120,9 +142,9 @@
             text-align: center;
         }
 
-        /*.reviews {*/
-        /*    margin-top: 100px;*/
-        /*}*/
+        .reviews {
+            margin-top: 100px;
+        }
 
         #_id {
             display: none;
@@ -133,13 +155,36 @@
 </head>
 
 <body>
-    <div id="_id">
-        {{id}}
+<div id="_id">
+    {{id}}
+</div>
+
+<div id="pharmacist">
+</div>
+
+
+<div class="container" style="max-width: 600px;">
+    <div id="reviews" class="reviews">
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">평점</th>
+                    <th scope="col">상담후기</th>
+                    <th scope="col">전화번호</th>
+                </tr>
+                </thead>
+                <tbody id="reviews-box">
+                <tr>
+                    <td>왕초보 8주 코딩</td>
+                    <td>김르탄</td>
+                    <td>역시 왕초보 코딩교육의 명가답군요. 따라하다보니 눈 깜짝할 사이에 8주가 지났습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-
-
-    <div class="container" style="max-width: 600px;">
     <img src="https://m.glossygirl.co.kr/file_data/evinie/2019/03/28/6b48e312e6bc971445b5f3019b37fe87.jpg"
          class="img-fluid" alt="Responsive image">
 
@@ -179,24 +224,8 @@
             <button onclick="makeReview()" type="button" class="btn btn-primary">후기 등록하기</button>
         </div>
     </div>
-    <!--            <div class="reviews">-->
-    <!--                <table class="table">-->
-    <!--                    <thead>-->
-    <!--                    <tr>-->
-    <!--                        <th scope="col">제목</th>-->
-    <!--                        <th scope="col">저자</th>-->
-    <!--                        <th scope="col">리뷰</th>-->
-    <!--                    </tr>-->
-    <!--                    </thead>-->
-    <!--                    <tbody id="reviews-box">-->
-    <!--                    <tr>-->
-    <!--                        <td>왕초보 8주 코딩</td>-->
-    <!--                        <td>김르탄</td>-->
-    <!--                        <td>역시 왕초보 코딩교육의 명가답군요. 따라하다보니 눈 깜짝할 사이에 8주가 지났습니다.</td>-->
-    <!--                    </tr>-->
-    <!--                    </tbody>-->
-    <!--                </table>-->
-    <!--            </div>-->
+
+
 </div>
 </body>
 
