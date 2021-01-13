@@ -3,7 +3,7 @@
 
 <head>
     <!-- Webpage Title -->
-    <title>후기 입력</title>
+    <title>상세 프로필</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -17,11 +17,13 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
 
+
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
             crossorigin="anonymous"></script>
+
 
     <!-- 구글폰트 -->
     <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
@@ -68,7 +70,6 @@
         function makeReview() {
             // 1. 제목, 저자, 리뷰 내용을 가져옵니다.
             let phone_number = $("#phone_number").val();
-            let pharm_name = $("#pharm_name").val();
             let star = $("#star").val();
             let review_detail = $("#review_detail").val();
             let id = $("#_id").text().trim()
@@ -82,10 +83,9 @@
                 url: "/reviews_db",
                 data: {
                     phone_number_give: phone_number,
-                    pharm_name_give: pharm_name,
                     star_give: star,
                     review_detail_give: review_detail,
-                    // _id : id,
+                    _id: id,
                 },
                 success: function (response) {
                     if (response["result"] == "success") {
@@ -96,23 +96,38 @@
             })
         }
 
-        // function showReview() {
-        //     // 1. 리뷰 목록을 서버에 요청하기
-        //     // 2. 요청 성공 여부 확인하기
-        //     // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "/review",
-        //         data: {},
-        //         success: function (response) {
-        //             if (response["result"] == "success") {
-        //                 alert(response["msg"]);
-        //             } else {
-        //                 alert("리뷰를 받아오지 못했습니다");
-        //             }
-        //         }
-        //     })
-        // }
+        function showReview() {
+            let id = $("#_id").text().trim()
+
+            // 1. 리뷰 목록을 서버에 요청하기
+            // 2. 요청 성공 여부 확인하기
+            // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
+            $.ajax({
+                type: "GET",
+                url: "/reviews_db",
+                data: {_id: id},
+                success: function (response) {
+                    if (response["result"] === "success") {
+                        let data = response['data'];
+                        for (let i = 0; i < data.length; i++) {
+                            let review = data[i];
+                            let star = review['star_give'];
+                            let detail = review['review_detail'];
+                            let phone = review['phone_number'];
+
+                            let temp = `<tr>
+                                            <td>${star}</td>
+                                            <td>${detail}</td>
+                                            <td>${phone}</td>
+                                        </tr>`
+                            $('#reviews-box').append(temp)
+                        }
+                    } else {
+                        alert("리뷰를 받아오지 못했습니다");
+                    }
+                }
+            })
+        }
 
         function validateLength(obj) {
             let content = $(obj).val();
@@ -121,6 +136,7 @@
                 $(obj).val(content.substring(0, content.length - 1));
             }
         }
+
     </script>
 
     <style type="text/css">
@@ -175,11 +191,11 @@
                 </tr>
                 </thead>
                 <tbody id="reviews-box">
-                <tr>
-                    <td>왕초보 8주 코딩</td>
-                    <td>김르탄</td>
-                    <td>역시 왕초보 코딩교육의 명가답군요. 따라하다보니 눈 깜짝할 사이에 8주가 지났습니다.</td>
-                </tr>
+                <!--                <tr>-->
+                <!--                    <td>왕초보 8주 코딩</td>-->
+                <!--                    <td>김르탄</td>-->
+                <!--                    <td>역시 왕초보 코딩교육의 명가답군요. 따라하다보니 눈 깜짝할 사이에 8주가 지났습니다.</td>-->
+                <!--                </tr>-->
                 </tbody>
             </table>
         </div>
@@ -200,16 +216,13 @@
         </div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text">상담약사</span>
-            </div>
-            <input type="text" class="form-control" id="pharm_name" placeholder="상담받은 약사님을 알려주세요.">
-        </div>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
                 <span class="input-group-text">평점</span>
             </div>
-            <input type="text" class="form-control" id="star" placeholder="평점을 입력해주세요.">
+            <input type="number" min="0" max="5" class="form-control" id="star" placeholder="평점을 선택해주세요.">
+
         </div>
+
+
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">상담후기</span>
@@ -227,6 +240,8 @@
 
 
 </div>
+
+
 </body>
 
 </html>

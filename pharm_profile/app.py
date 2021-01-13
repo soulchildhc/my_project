@@ -54,9 +54,9 @@ def save_profile():
 
 
 ## HTML 화면 보여주기
-@app.route('/reviews')
-def reviews():
-    return render_template('index_one.html')
+# @app.route('/reviews')
+# def reviews():
+#     return render_template('index_one.html')
 
 
 # 주문하기(POST) API
@@ -64,7 +64,6 @@ def reviews():
 def save_review():
     id_receive = request.form['_id']
     phone_number_receive = request.form['phone_number_give']
-    pharm_name_receive = request.form['pharm_name_give']
     star_give_receive = request.form['star_give']
     review_detail_receive = request.form['review_detail_give']
 
@@ -77,9 +76,24 @@ def save_review():
 
     db.reviews.insert_one(reviews)
     pharmacist = db.pharmacists.find_one({'_id': ObjectId(id_receive)})
+    new_total_review = pharmacist['total_review'] + 1
+    new_total_star1 = pharmacist['stars'] * pharmacist['total_review']
+    # new_total_star2 = new_total_star1 + star_give_receive
+    # new_total_star3= new_total_star2 / new_total_review
+    # db.pharmacists.update_one({'_id': ObjectId(id_receive)}, {'$set' : {'stars' : new_total_star3}})
+    db.pharmacists.update_one({'_id': ObjectId(id_receive)}, {'$set' : {'total_review' : new_total_review}})
+
+
 
     return jsonify({'result': 'success', 'msg' : '후기등록이 완료되었습니다!'})
 
+
+@app.route('/reviews_db', methods=['GET'])
+def show_review():
+    id_receive = request.args.get('_id')
+    pharmacist_review = object_id_decoder(db.reviews.find({'pharmacist_id': id_receive}))
+
+    return jsonify({'result' : 'success', 'data' : pharmacist_review})
 
 # # HTML 화면 보여주기
 @app.route('/mypharm')
@@ -93,8 +107,9 @@ def home():
 def show_pharmacist():
 #     # 1. db에서 mystar 목록 전체를 검색합니다. ID는 제외하고 like 가 많은 순으로 정렬합니다.
 #     # 참고) find({},{'_id':False}), sort()를 활용하면 굿!
-    pharm_list = object_id_decoder(db.pharmacists.find())
-#
+#(list(db.mystar.find().sort('like', -1)))
+    pharm_list = object_id_decoder(list(db.pharmacists.find().sort('total_review', -1)))
+
 #     # 2. 성공하면 success 메시지와 함께 stars_list 목록을 클라이언트에 전달합니다.
     return jsonify({'result': 'success', 'data': pharm_list})
 
