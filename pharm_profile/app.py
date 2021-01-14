@@ -64,7 +64,7 @@ def save_profile():
 def save_review():
     id_receive = request.form['_id']
     phone_number_receive = request.form['phone_number_give']
-    star_give_receive = request.form['star_give']
+    star_give_receive = int(request.form['star_give'])
     review_detail_receive = request.form['review_detail_give']
 
     reviews = {
@@ -78,9 +78,9 @@ def save_review():
     pharmacist = db.pharmacists.find_one({'_id': ObjectId(id_receive)})
     new_total_review = pharmacist['total_review'] + 1
     new_total_star1 = pharmacist['stars'] * pharmacist['total_review']
-    # new_total_star2 = new_total_star1 + star_give_receive
-    # new_total_star3= new_total_star2 / new_total_review
-    # db.pharmacists.update_one({'_id': ObjectId(id_receive)}, {'$set' : {'stars' : new_total_star3}})
+    new_total_star2 = new_total_star1 + star_give_receive
+    new_total_star3= new_total_star2 / new_total_review
+    db.pharmacists.update_one({'_id': ObjectId(id_receive)}, {'$set' : {'stars' : new_total_star3}})
     db.pharmacists.update_one({'_id': ObjectId(id_receive)}, {'$set' : {'total_review' : new_total_review}})
 
 
@@ -109,6 +109,17 @@ def show_pharmacist():
 #     # 참고) find({},{'_id':False}), sort()를 활용하면 굿!
 #(list(db.mystar.find().sort('like', -1)))
     pharm_list = object_id_decoder(list(db.pharmacists.find().sort('total_review', -1)))
+
+#     # 2. 성공하면 success 메시지와 함께 stars_list 목록을 클라이언트에 전달합니다.
+    return jsonify({'result': 'success', 'data': pharm_list})
+
+# 정렬기준 추가
+@app.route('/pharmacists_db_star', methods=['GET'])
+def show_pharmacist_star():
+#     # 1. db에서 mystar 목록 전체를 검색합니다. ID는 제외하고 like 가 많은 순으로 정렬합니다.
+#     # 참고) find({},{'_id':False}), sort()를 활용하면 굿!
+#(list(db.mystar.find().sort('like', -1)))
+    pharm_list = object_id_decoder(list(db.pharmacists.find().sort('stars', -1)))
 
 #     # 2. 성공하면 success 메시지와 함께 stars_list 목록을 클라이언트에 전달합니다.
     return jsonify({'result': 'success', 'data': pharm_list})

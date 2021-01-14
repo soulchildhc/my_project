@@ -23,6 +23,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
             crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
 
 
     <!-- 구글폰트 -->
@@ -33,6 +37,13 @@
         $(document).ready(function () {
             $("#reviews-box").html("");
             showReview();
+
+            $(function () {
+                $("#rateYo").rateYo({
+                    rating: 5,
+                    fullStar: true
+                });
+            });
         });
 
         $(document).ready(function () {
@@ -70,10 +81,11 @@
         function makeReview() {
             // 1. 제목, 저자, 리뷰 내용을 가져옵니다.
             let phone_number = $("#phone_number").val();
-            let star = $("#star").val();
+            // let star = $("#star").val();
             let review_detail = $("#review_detail").val();
             let id = $("#_id").text().trim()
 
+            let normalFill = $("#rateYo").rateYo("rating")
 
             // 2. 제목, 저자, 리뷰 중 하나라도 입력하지 않았을 경우 alert를 띄웁니다.
 
@@ -83,7 +95,7 @@
                 url: "/reviews_db",
                 data: {
                     phone_number_give: phone_number,
-                    star_give: star,
+                    star_give: normalFill,
                     review_detail_give: review_detail,
                     _id: id,
                 },
@@ -218,7 +230,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">평점</span>
             </div>
-            <input type="number" min="0" max="5" class="form-control" id="star" placeholder="평점을 선택해주세요.">
+            <div id="rateYo"></div>
+            <!--            <input type="number" min="0" max="5" class="form-control" id="star" placeholder="평점을 선택해주세요.">-->
 
         </div>
 
