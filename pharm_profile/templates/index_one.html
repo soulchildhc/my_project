@@ -50,7 +50,7 @@
             let id = $("#_id").text().trim()
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:5000/pharmacist_db?id=' + id,
+                url: '/pharmacist_db?id=' + id,
                 success: function (res) {
                     let one_info = res['data'];
                     let pharm_img = one_info['pharm_img'];
