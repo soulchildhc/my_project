@@ -5,7 +5,8 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://test:test@localhost', 27017)
+# client = MongoClient('localhost', 27017)
 db = client.dbproject
 
 
@@ -96,7 +97,7 @@ def show_review():
     return jsonify({'result' : 'success', 'data' : pharmacist_review})
 
 # # HTML 화면 보여주기
-@app.route('/mypharm')
+@app.route('/')
 def home():
     return render_template('index_total_profile.html')
 

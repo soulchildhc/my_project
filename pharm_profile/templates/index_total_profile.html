@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <meta property="og:title" content="단골약사 MALL"/>
+    <meta property="og:description" content="상담받을 약사님을 직접 선택해보세요!"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimage.png') }}"/>
+
+
     <title>단골약사 선택</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
@@ -37,6 +43,9 @@
 
         #button {
             text-align: center;
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
         }
 
     </style>
@@ -213,7 +222,7 @@
 
 <!--평점기준으로 정렬버튼-->
 <div id="button">
-    <button type="button" class="btn btn-primary" onclick="StarPharmacist()">평점으로 정렬</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="StarPharmacist()">평점으로 정렬</button>
 </div>
 
 <!--<div class="container">-->
